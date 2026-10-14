@@ -50,8 +50,9 @@ class SampleApisCoffeeClient:
         response = self._request("PATCH", f"/{drink_id}", payload=changes)
         return response.json()
 
-    def delete_drink(self, drink_id: int) -> None:
-        self._request("DELETE", f"/{drink_id}")
+    def delete_drink(self, drink_id: int) -> JsonObject:
+        response = self._request("DELETE", f"/{drink_id}")
+        return response.json()
 
     def _request(
         self,
@@ -79,7 +80,7 @@ class SampleApisCoffeeClient:
             raise CoffeeApiError(
                 f"Ошибка API: {response.status_code}"
             )
-        if method != "DELETE" and response.text.strip():
+        if response.text.strip():
             content_type = response.headers.get("Content-Type", "")
             if "application/json" not in content_type:
                 raise CoffeeApiError(
